@@ -11,16 +11,14 @@ class CartTest extends TestCase
 {
     public function testFifthProductFreeDiscount(): void
     {
-        $cart = new Cart();
+        $cart = new Cart([new FifthProductFreeDiscount()]);
+
         $product = new Product('candy', 10.0);
         for ($i = 0; $i < 5; $i++) {
-            $cart->add($product);
+            $cart->addProduct($product);
         }
 
-        $offer = $cart->checkout([
-            new FifthProductFreeDiscount(),
-            new TenPercentDiscount()
-        ]);
+        $offer = $cart->checkout();
 
         $this->assertEquals(50.0, $offer->getTotalBeforeDiscount());
         $this->assertEquals(40.0, $offer->getTotalAfterDiscount());
@@ -29,16 +27,13 @@ class CartTest extends TestCase
 
     public function testTenPercentDiscount(): void
     {
-        $cart = new Cart();
+        $cart = new Cart([new TenPercentDiscount()]);
         $product = new Product('book', 51.0);
         for ($i = 0; $i < 2; $i++) {
-            $cart->add($product);
+            $cart->addProduct($product);
         }
 
-        $offer = $cart->checkout([
-            new FifthProductFreeDiscount(),
-            new TenPercentDiscount()
-        ]);
+        $offer = $cart->checkout();
 
         $this->assertEquals(102.0, $offer->getTotalBeforeDiscount());
         $this->assertEquals(91.8, $offer->getTotalAfterDiscount());
@@ -48,12 +43,9 @@ class CartTest extends TestCase
     public function testNoDiscount(): void
     {
         $cart = new Cart();
-        $cart->add(new Product('pencil', 5.0));
+        $cart->addProduct(new Product('pencil', 5.0));
 
-        $offer = $cart->checkout([
-            new FifthProductFreeDiscount(),
-            new TenPercentDiscount()
-        ]);
+        $offer = $cart->checkout();
 
         $this->assertEquals(5.0, $offer->getTotalBeforeDiscount());
         $this->assertEquals(5.0, $offer->getTotalAfterDiscount());
@@ -63,15 +55,13 @@ class CartTest extends TestCase
     public function testDiscountsDoNotStack(): void
     {
         $cart = new Cart();
+
         $product = new Product('item', 25.0);
         for ($i = 0; $i < 5; $i++) {
-            $cart->add($product);
+            $cart->addProduct($product);
         }
 
-        $offer = $cart->checkout([
-            new FifthProductFreeDiscount(),
-            new TenPercentDiscount()
-        ]);
+        $offer = $cart->checkout();
 
         $this->assertEquals(125.0, $offer->getTotalBeforeDiscount());
         $this->assertEquals(100.0, $offer->getTotalAfterDiscount());
