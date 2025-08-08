@@ -5,7 +5,6 @@ Usage (default discounts):
 
 ```php
 $cart = new Cart();
-$cart = new Cart();
 
 $product = new Product('item1', 25.0);
 $product = new Product('item2', 50.0);
