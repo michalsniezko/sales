@@ -14,7 +14,7 @@ readonly class Offer
     /** @param array<Product> $products */
     public function __construct(array $products, float $discountAmount, DiscountType $appliedDiscount)
     {
-        $this->totalBeforeDiscount = array_sum(array_map(fn($p) => $p->getPrice(), $products));
+        $this->totalBeforeDiscount = array_sum(array_map(fn(Product $p) => $p->getPrice(), $products));
         $this->discountAmount = $discountAmount;
         $this->totalAfterDiscount = $this->totalBeforeDiscount - $discountAmount;
         $this->appliedDiscount = $appliedDiscount;
